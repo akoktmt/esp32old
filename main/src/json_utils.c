@@ -5,13 +5,14 @@
 #define MAX_JSON_LENGTH 256
 
 // Function to prepare JSON data
-char *prepare_json_data(float speed, double latitude, double longitude, float heading)
+char *prepare_json_data(float speed, double latitude, double longitude, float heading,float distance2lot)
 {
     cJSON *root = cJSON_CreateObject();
     cJSON_AddNumberToObject(root, "speed", speed);
     cJSON_AddNumberToObject(root, "lat", latitude);
     cJSON_AddNumberToObject(root, "long", longitude);
     cJSON_AddNumberToObject(root, "heading", heading);
+    cJSON_AddNumberToObject(root, "Distance", distance2lot);
     char *json_string = cJSON_PrintUnformatted(root);
     cJSON_Delete(root);
 
@@ -23,7 +24,7 @@ char *prepare_json_data(float speed, double latitude, double longitude, float he
 
     // Create a new string with formatted values
     char formatted_json[MAX_JSON_LENGTH];
-    snprintf(formatted_json, MAX_JSON_LENGTH, "{\"speed\":%.2f,\"lat\":%.6lf,\"long\":%.6lf,\"heading\":%.2f}", speed, latitude, longitude, heading);
+    snprintf(formatted_json, MAX_JSON_LENGTH, "{\"speed\":%f,\"Filter_lat\":%.6lf,\"Filter_long\":%.6lf,\"heading\":%.2f,\"distance\":%.6lf}", speed, latitude, longitude, heading,distance2lot);
 
     // Free the original JSON string
     free(json_string);
@@ -35,11 +36,11 @@ char *prepare_json_data(float speed, double latitude, double longitude, float he
     return result;
 }
 
-char *prepare_sensor_data(float temperature, float humid)
+char *prepare_sensor_data(float latitude, float longitude)
 {
     cJSON *root = cJSON_CreateObject();
-    cJSON_AddNumberToObject(root, "Temperature", temperature);
-    cJSON_AddNumberToObject(root, "Humidity", humid);
+    cJSON_AddNumberToObject(root, "lat", latitude);
+    cJSON_AddNumberToObject(root, "long", longitude);
     char *json_string = cJSON_PrintUnformatted(root);
     cJSON_Delete(root);
 
@@ -51,7 +52,7 @@ char *prepare_sensor_data(float temperature, float humid)
 
     // Create a new string with formatted values
     char formatted_json[MAX_JSON_LENGTH];
-    snprintf(formatted_json, MAX_JSON_LENGTH, "{\"Temperature\":%.2f,\"Humidity\":%.2f}", temperature, humid);
+    snprintf(formatted_json, MAX_JSON_LENGTH, "{\"GPS_lat\":%.6lf,\"GPS_long\":%.6lf}", latitude, longitude);
 
     // Free the original JSON string
     free(json_string);

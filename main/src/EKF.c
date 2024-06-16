@@ -87,19 +87,23 @@ void EKF_PredictionStep(EKF *EKF, Angle *Angle, Input *Input){
 	 EKF->NexStee= EKF->FirStee + Input->Stee*Input->Time;
 	 //
 	 Angle->AngleBeta= atan(LENGTH_REAR*tan(EKF->NexStee*PI/180)/LENGTH_CAR);
-	 
-	// printf("AngleBeta %f\r\n",Angle->AngleBeta);
-	// printf("FirStee %f\r\n",EKF->FirStee);
+	 float coss;
+	 float sinn;
 	// printf("NexStee %f\r\n",EKF->NexStee);
+
+	//  printf("AngleBeta %f\r\n",Angle->AngleBeta);  
+	//   printf("FirStee %f\r\n",EKF->FirStee);   
 
 	 EKF->NexPx= EKF->FirPx + (velocityDegreesPerSecondLatitude * cos(Angle->AngleBeta*PI/180+EKF->FirHea*PI/180))*Input->Time;
 
 	 EKF->NexPy= EKF->FirPy + (velocityDegreesPerSecondLongitude * sin(Angle->AngleBeta*PI/180+EKF->FirHea*PI/180))*Input->Time;
+	sinn = EKF->FirPy;
+	coss = (velocityDegreesPerSecondLongitude * sin(Angle->AngleBeta*PI/180+EKF->FirHea*PI/180))*Input->Time;
+	 
+	printf("sinn %f\r\n",sinn);
+	printf("coss %f\r\n",coss);	
 
-    //  printf("AngleBeta %f\r\n",Angle->AngleBeta);  
-	//  printf("FirStee %f\r\n",EKF->FirStee);  
-	//  printf("FirHea %f\r\n",EKF->FirHea);	 
-//	printf("%f || %f\r\n",EKF->NexPx,EKF->NexPy);
+	printf("EKF->NexPy %f\r\n",EKF->NexPy);
 
 	 EKF->NexHea= EKF->FirHea + ((EKF->FirVelx*tan(EKF->NexStee*PI/180)*cos(Angle->AngleBeta*PI/180))/LENGTH_CAR)*Input->Time;
 

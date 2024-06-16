@@ -14,28 +14,19 @@ uint8_t firstinit=1;
 extern uint8_t GPSrec;
 Coordinate route[] = {
 {
-  10.869602, 106.802337
+  10.86965, 106.80231
 },
 {
-  10.869606, 106.802338
+  10.86974, 106.80231
 },
 {
-  10.869645, 106.802337
+  10.86983, 106.80231
 },
 {
-  10.869699, 106.802337
+  10.86990, 106.80231
 },
 {
-  10.869751, 106.802338
-},
-{
-  10.869810, 106.802339
-},
-{
-  10.869853, 106.802339
-},
-{
-  10.869915, 106.802341
+  10.86999, 106.80231
 }
 };
 Coordinate lot;
@@ -117,7 +108,7 @@ void GPSpath(){
             if(Headingtrue==true){
                 if(InitSignal!=true){
                         initialize_orientation();
-                        vTaskDelay(pdMS_TO_TICKS(5000));
+                        
                         pid_speed=5;
                         GPSstate=CAL_DIS_ANGLE; 
                         Initorientation=true;

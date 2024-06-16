@@ -4,7 +4,12 @@
 #include <freertos/task.h>
 #include <esp_log.h>
 #include "json_utils.h"
-
+#include "EKF.h"
+#include "GPS_Measurement.h"
+extern EKF EKFexe;
+extern GPS GPSexe; 
+extern float EncoderVel;
+extern float distance2lot;
 static const char *TAG = "SOCKET_TASKS";
 
 // Task stack size and priority
@@ -74,13 +79,14 @@ void socket1_task(void *pvParameters)
                 ESP_LOGI(TAG, "Socket1 received: %s", recv_buffer);
 
                 // Check if request is GET_JSON_DATA
-                if (strcmp(recv_buffer, "GET_JSON_DATA") == 0)
+                if (strcmp(recv_buffer, "GET_FILTER_DATA") == 0)
                 {
-                    float speed = 50.25;
-                    double latitude = 10.869720;
-                    double longitude = 106.802334;
-                    float heading = 90.75;
-                    const char *json_data = prepare_json_data(speed, latitude, longitude, heading);
+                    float speed = EncoderVel;
+                    float distance = distance2lot;
+                    float latitude = EKFexe.FirPx;
+                    float longitude = EKFexe.FirPy;
+                    float heading = EKFexe.FirHea;
+                    const char *json_data = prepare_json_data(speed, latitude, longitude, heading,distance);
                     if (json_data)
                     {
                         tcp_socket_send(&socket1, json_data, strlen(json_data));
@@ -123,11 +129,11 @@ void socket2_task(void *pvParameters)
                 ESP_LOGI(TAG, "Socket2 received: %s", recv_buffer);
 
                 // Check if request is GET_SENSOR_DATA
-                if (strcmp(recv_buffer, "GET_SENSOR_DATA") == 0)
+                if (strcmp(recv_buffer, "GET_GPSDRAW_DATA") == 0)
                 {
-                    float humid = 50.25;
-                    float temperature = 30.75;
-                    const char *json_data = prepare_sensor_data(temperature, humid);
+                    float latitude = GPSexe.GPSGetPosition[0];
+                    float longitude = GPSexe.GPSGetPosition[1];
+                    const char *json_data = prepare_sensor_data(latitude, longitude);
                     if (json_data)
                     {
                         tcp_socket_send(&socket2, json_data, strlen(json_data));

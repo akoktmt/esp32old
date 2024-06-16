@@ -47,7 +47,7 @@ extern float heading_diff;
 static void twai_transmit_task(void *arg){
     for(;;)
     {
-    // GPSrec=1;
+     GPSrec=1;
     if(GPSrec==1){
        // printf("OK \r\n");
         twai_message_t message;

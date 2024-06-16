@@ -112,13 +112,13 @@ void GPS_Exe()
         EKFcheckPy=GPSexe.GPSGetPosition[1];
         EFK_GPSHandleMeasurement(&GPSexe,&EKFexe);
         Kalman=true;
-         printf("Px %f Py %f\r\n", EKFexe.FirPx , EKFexe.FirPy);
-         printf("Px_ %f Py_ %f\r\n",GPSexe.GPSGetPosition[0],GPSexe.GPSGetPosition[1]);
+        //  printf("Px %f Py %f\r\n", EKFexe.FirPx , EKFexe.FirPy);
+         // printf("Px_ %f Py_ %f\r\n",GPSexe.GPSGetPosition[0],GPSexe.GPSGetPosition[1]);
        }
        else {
         EKFexe.FirPx=EKFexe.NexPx;
         EKFexe.FirPy=EKFexe.NexPy;
-        // printf("Px %f Py %f\r\n", EKFexe.FirPx , EKFexe.FirPy);
+        //  printf("Px %f Py %f\r\n", EKFexe.FirPx , EKFexe.FirPy);
         // printf("Px_ %f Py_ %f\r\n", GPSexe.GPSGetPosition[0] , GPSexe.GPSGetPosition[1]);
         Kalman=false; 
        }
@@ -158,7 +158,7 @@ void GPS_Exe()
     //     }
      //   printf("Px %f || Py %f || Vx %f || Vy %f || H %f || S %f || Pxcov %f|| Pycov %f|| Vxcov %f|| Vycov %f|| Hcov %f|| Scov %f\r\n",EKFexe.NexPx,EKFexe.NexPy,EKFexe.NexVelx,EKFexe.NexVely,EKFexe.NexHea,EKFexe.NexStee,EKFexe.Prediction_CovarianceNex[0][0],EKFexe.Prediction_CovarianceNex[1][1],EKFexe.Prediction_CovarianceNex[2][2],EKFexe.Prediction_CovarianceNex[3][3],EKFexe.Prediction_CovarianceNex[4][4],EKFexe.Prediction_CovarianceNex[5][5]);
        // printf("Heading %f\r\n",EKFexe.FirHea);
-        vTaskDelay(pdMS_TO_TICKS(800));
+        vTaskDelay(pdMS_TO_TICKS(600));
     }
 }
 void Heading_Vel_Exe(){
@@ -203,8 +203,8 @@ void Heading_Vel_Exe(){
 void EKF_ExeInit()
 {
   //Predicton covariane
-  EKFexe.CovPx=0.000003; 
-	EKFexe.CovPy=0.000003; 
+  EKFexe.CovPx=0.000001; 
+	EKFexe.CovPy=0.000002; 
 	EKFexe.CovVelx=0.1;
 	EKFexe.CovHea=0.2; 
 	EKFexe.CovStee=0.1; 
@@ -214,8 +214,8 @@ void EKF_ExeInit()
     EKFexe.FirVelx=0; 
     EKFexe.FirStee=0;
     //10.870400, 106.802198//10.869763, 106.802328
-    EKFexe.FirPx= 10.869533;
-    EKFexe.FirPy= 106.802337; 
+    EKFexe.FirPx= 10.86965 ;
+    EKFexe.FirPy= 106.80231; 
 
 	  EKFexe.FirHea=0; 
 
@@ -233,7 +233,7 @@ void EKF_ExeInit()
     Velocityexe.CovarianeVx=0.02;
     GPS_Init(&GPSexe);
     GPSexe.GPSCovariance[0][0]=0.000001;
-    GPSexe.GPSCovariance[1][1]=0.000016;
+    GPSexe.GPSCovariance[1][1]=0.000001;
    // printf("%f || %f  || %f||  %f||  %f || %f\r\n", EKFexe.Prediction_CovarianceFir[0][0], EKFexe.Prediction_CovarianceFir[1][1], EKFexe.Prediction_CovarianceFir[2][2], EKFexe.Prediction_CovarianceFir[3][3], EKFexe.Prediction_CovarianceFir[4][4], EKFexe.Prediction_CovarianceFir[5][5]);
     xTaskCreate(GPS_Exe, "GPS_Exe", 1048 * 5, NULL, 10, NULL);
     xTaskCreate(Heading_Vel_Exe, "Heading_Exe", 1048 * 5, NULL, 11, NULL);
